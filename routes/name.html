@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Type Ahead</title>
+	<style type="text/css">
+		* {
+		  box-sizing: border-box;
+		}
+		table{
+			font-family: arial, sans-serif;
+			border-collapse: collapse;
+			width: 50%;
+		}
+		td,th{
+			border: 1px solid #dddddd;
+			text-align: left;
+			padding: 8px;
+
+		}
+		tr:nth-child(even){
+			background-color: #dddddd;
+			
+		}
+		.search-form{
+			max-width: 400px;
+			margin: 50px;
+		}
+		input.serach{
+			margin: 10px;
+
+		}
+		#myInput{
+			background-position: 10px 10px;
+			background-repeat: no-repeat;
+			width: 50%;
+			font-size: 16px;
+			padding: 12px 20px 12px 40px;
+			border: 1px solid #ddd;
+			margin-bottom: 12px;
+			margin-top: 20px;
+		}
+	</style>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+	
+</head>
+<body>
+	<div class="container">
+	<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names..." title="Type in a name">
+	
+
+	<div id="chat"></div>
+	</div>
+	<script src="/socket.io/socket.io.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script type="text/javascript">
+    jQuery (function($){
+    	var endpoint;
+    	var socket=io.connect();
+    	var $chat = $('#chat');
+    	console.log('connected');
+    	socket.on('load data', function(docs){
+    		
+    		displaydata(docs);
+    		
+    	});
+    	function displaydata(data){
+    		console.log(data.length);
+    		var html = "<table id='myTable'>";
+    		html+="<tr><th>Firstname</th><th>Lastname</th><th>Age</th><th>Gender</th><th>Phone</th><th>Information</th></tr>";
+	    	for(var i=0;i<data.length;i++){
+	    		html+="<tr>";
+	    		//console.log(data[i].firstname);
+	    		html+="<td>"+data[i].firstname+"</td>";
+	    		html+="<td>"+data[i].lastname+"</td>";
+	    		html+="<td>"+data[i].age+"</td>";
+	    		html+="<td>"+data[i].gender+"</td>";
+	    		html+="<td>"+data[i].phone+"</td>";
+	    		html+="<td>"+data[i].information+"</td>";
+	    		html+="</tr>";
+
+	    	}
+	    	html+="</table>";
+	    	//console.log(html);
+	    	document.getElementById("chat").innerHTML = html;
+
+
+    	}
+    	
+    	
+
+
+    });
+
+    function myFunction(){
+
+    		var input,filter,table,tr,td,i;
+    		input = document.getElementById("myInput");
+    		filter = input.value.toUpperCase();
+    		table = document.getElementById("myTable");
+    		tr = table.getElementsByTagName("tr");
+    		for(i=0;i<tr.length;i++){
+    			td=tr[i].getElementsByTagName("td")[0];
+    			if(td){
+    				if(td.innerHTML.toUpperCase().indexOf(filter) > -1){
+    					tr[i].style.display = "";
+
+    				}else{
+    					tr[i].style.display = "none";
+    				}
+    			}
+    		}
+    	}
+    	
+    </script>
+</body>
+</html>
